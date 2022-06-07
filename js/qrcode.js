@@ -554,7 +554,7 @@ var qrcode = function() {
       return qrSvg;
     };
 
-    _this.createDataURL = function(cellSize, margin) {
+    _this.createDataURL = function(cellSize, margin, background, foreground) {
 
       cellSize = cellSize || 2;
       margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
@@ -571,7 +571,7 @@ var qrcode = function() {
         } else {
           return 1;
         }
-      } );
+      }, background, foreground);
     };
 
     _this.createImgTag = function(cellSize, margin, alt) {
@@ -2009,8 +2009,23 @@ var qrcode = function() {
   // gifImage (B/W)
   //---------------------------------------------------------------------
 
-  var gifImage = function(width, height) {
-
+  var gifImage = function(width, height, background, foreground) {
+    //---------------------------------
+    // Color
+    var _bg_array = background
+      ? background.match(/(\w{2})(\w{2})(\w{2})/)
+      : [0,'ff','ff','ff'];
+    var br = new Uint8Array([ '0x' + _bg_array[1] ]);
+    var bg = new Uint8Array([ '0x' + _bg_array[2] ]);
+    var bb = new Uint8Array([ '0x' + _bg_array[3] ]);
+    var _fg_array = foreground
+      ? foreground.match(/(\w{2})(\w{2})(\w{2})/)
+      : [ 0, '00', '00', '00' ];
+    var fr = new Uint8Array([ '0x' + _fg_array[1] ]);
+    var fg = new Uint8Array([ '0x' + _fg_array[2] ]);
+    var fb = new Uint8Array([ '0x' + _fg_array[3] ]);
+    
+    
     var _width = width;
     var _height = height;
     var _data = new Array(width * height);
@@ -2042,15 +2057,15 @@ var qrcode = function() {
       // Global Color Map
 
       // black
-      out.writeByte(0x00);
-      out.writeByte(0x00);
-      out.writeByte(0x00);
-
+      out.writeByte(fr[0]);
+      out.writeByte(fg[0]);
+      out.writeByte(fb[0]);
+      
       // white
-      out.writeByte(0xff);
-      out.writeByte(0xff);
-      out.writeByte(0xff);
-
+      out.writeByte(br[0]);
+      out.writeByte(bg[0]);
+      out.writeByte(bb[0]);
+      
       //---------------------------------
       // Image Descriptor
 
@@ -2219,8 +2234,8 @@ var qrcode = function() {
     return _this;
   };
 
-  var createDataURL = function(width, height, getPixel) {
-    var gif = gifImage(width, height);
+  var createDataURL = function(width, height, getPixel, background, foreground) {
+    var gif = gifImage(width, height, background, foreground);
     for (var y = 0; y < height; y += 1) {
       for (var x = 0; x < width; x += 1) {
         gif.setPixel(x, y, getPixel(x, y) );
