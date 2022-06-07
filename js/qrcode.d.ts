@@ -44,7 +44,7 @@ interface QRCode {
   createSvgTag(cellSize?: number, margin?: number) : string;
   createSvgTag(opts? : { cellSize?: number, margin?: number,
       scalable?: boolean }) : string;
-  createDataURL(cellSize?: number, margin?: number) : string;
+  createDataURL(cellSize?: number, margin?: number, background?: string, foreground?: string) : string;
   createTableTag(cellSize?: number, margin?: number) : string;
   createASCII(cellSize?: number, margin?: number) : string;
   renderTo2dContext(context: CanvasRenderingContext2D, cellSize?: number): void;
