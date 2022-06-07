@@ -3,3 +3,14 @@ misc
 demo
 sample.*
 *.tgz
+as3
+hack
+java
+js
+php
+python
+ruby
+ts
+.project
+.gitignore
+.npmignore
